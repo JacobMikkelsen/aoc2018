@@ -2,6 +2,8 @@
 
 frequencies = dict()
 frequency = 0
+frequencies[frequency] = True
+
 lines = []
 
 with (open('input.txt')) as f:
@@ -21,4 +23,3 @@ while True:
     frequencies[frequency] = True
     
     i = (i + 1) % length
-
