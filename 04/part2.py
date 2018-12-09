@@ -51,24 +51,6 @@ def parse_input(lines):
 def parse_timestamp(time_string):
     return datetime.strptime(time_string, "%Y-%m-%d %H:%M")
 
-def most_sleep(guard_shifts):
-    
-    most_sleep = None
-    
-    for guard in guard_shifts:
-        minutes_slept = 0
-        for date in guard_shifts[guard]:
-            for minute in guard_shifts[guard][date]:
-                if minute == 's':
-                    minutes_slept += 1
-                    
-        # print(guard, "slept for", minutes_slept, "minutes")
-        if most_sleep == None or most_sleep[1] < minutes_slept:
-            most_sleep = (guard, minutes_slept)
-    
-    # print(most_sleep)
-    return most_sleep[0]
-
 def find_sleepiest_minute(guard_shifts, guard):
     minutes = [0] * 60
     for date in guard_shifts[guard]:
@@ -81,16 +63,25 @@ def find_sleepiest_minute(guard_shifts, guard):
             sleepiest_minute = (i, minutes[i])
     
     # print(sleepiest_minute)
-    return sleepiest_minute[0]
+    return sleepiest_minute
+
+def find_most_consistent_guard(guard_shifts):
+    
+    guard_minute_times = None
+    for guard in guard_shifts:
+        (minute, times) = find_sleepiest_minute(guard_shifts, guard)
+        # print(guard, minute, times)
+        if guard_minute_times == None or times > guard_minute_times[2]:
+            guard_minute_times = (guard, minute, times)
+    return (guard_minute_times[0], guard_minute_times[1])
+
 
 file_input = read_input('input.txt')
 # print(file_input)
 
 guard_shifts = parse_input(file_input)
 
-sleepiest_guard = most_sleep(guard_shifts)
-sleepiest_minute = find_sleepiest_minute(guard_shifts, sleepiest_guard)
+(most_consistent_guard, minute) = find_most_consistent_guard(guard_shifts)
 
-answer = int(sleepiest_guard) * int(sleepiest_minute)
-
+answer = int(most_consistent_guard) * int(minute)
 print(answer)
